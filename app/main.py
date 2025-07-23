@@ -5,6 +5,7 @@ from redis import Redis
 from rq import Queue
 from rq.job import Job
 import os
+from rq import Worker, Connection
 
 from app.worker import run_code, execute_problem
 
@@ -78,3 +79,7 @@ async def get_result_problem(job_id: str):
         return {"status": "failed", "results": [], "error": "Job failed"}
     else:
         return {"status": "pending", "results": [], "error": ""}
+
+with Connection(redis_conn):
+    worker = Worker(['default'])
+    worker.work()
