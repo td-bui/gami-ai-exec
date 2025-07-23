@@ -2,6 +2,9 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
+# Set the PYTHONPATH environment variable to include the current directory
+ENV PYTHONPATH "${PYTHONPATH}:/app"
+
 # Copy all code including app/ directory
 COPY . .
 
