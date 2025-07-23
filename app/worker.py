@@ -4,7 +4,8 @@ import os
 import subprocess
 import time
 import resource
-from rq import Worker, Connection
+from rq import Worker
+from rq.connections import Connection
 from redis import Redis
 
 def build_code_to_run(code: str, test_input: str) -> str:
