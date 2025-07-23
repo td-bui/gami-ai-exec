@@ -32,8 +32,7 @@ redis_conn = Redis(
     host=redis_host,
     port=redis_port,
     username=redis_user,
-    password=redis_password,
-    decode_responses=True
+    password=redis_password
 )
 q = Queue(connection=redis_conn)
 
