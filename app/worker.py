@@ -5,7 +5,6 @@ import subprocess
 import time
 import resource
 from rq import Worker
-from rq.connections import Connection
 from redis import Redis
 
 def build_code_to_run(code: str, test_input: str) -> str:
@@ -79,6 +78,5 @@ if __name__ == "__main__":
         password=os.environ.get("REDIS_PASSWORD", None),
         decode_responses=True
     )
-    with Connection(redis_conn):
-        worker = Worker(['default'])
-        worker.work()
+    worker = Worker(['default'], connection=redis_conn)
+    worker.work()
