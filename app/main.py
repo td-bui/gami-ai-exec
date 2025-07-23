@@ -6,7 +6,7 @@ from rq import Queue
 from rq.job import Job
 import os
 
-from worker import run_code, execute_problem
+from app.worker import run_code, execute_problem
 
 app = FastAPI()
 
