@@ -75,8 +75,7 @@ if __name__ == "__main__":
         host=os.environ.get("REDIS_HOST", "localhost"),
         port=int(os.environ.get("REDIS_PORT", 6379)),
         username=os.environ.get("REDIS_USER", None),
-        password=os.environ.get("REDIS_PASSWORD", None),
-        decode_responses=True
+        password=os.environ.get("REDIS_PASSWORD", None)
     )
     worker = Worker(['default'], connection=redis_conn)
     worker.work()
