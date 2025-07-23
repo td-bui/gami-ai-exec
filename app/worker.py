@@ -80,3 +80,5 @@ if __name__ == "__main__":
     )
     worker = Worker(['default'], connection=redis_conn)
     worker.work()
+    r = Redis(host="...", port=6379, username="...", password="...")
+    print(r.ping())
