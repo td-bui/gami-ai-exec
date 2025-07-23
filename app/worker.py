@@ -4,6 +4,8 @@ import os
 import subprocess
 import time
 import resource
+from rq import Worker, Connection
+from redis import Redis
 
 def build_code_to_run(code: str, test_input: str) -> str:
     return f"{code}\nprint({test_input})"
@@ -67,3 +69,15 @@ def execute_problem(user_code: str, solution_code: str, test_cases: list):
             "userMemory": user_result.get("memory"),
         })
     return {"results": results, "error": ""}
+
+if __name__ == "__main__":
+    redis_conn = Redis(
+        host=os.environ.get("REDIS_HOST", "localhost"),
+        port=int(os.environ.get("REDIS_PORT", 6379)),
+        username=os.environ.get("REDIS_USER", None),
+        password=os.environ.get("REDIS_PASSWORD", None),
+        decode_responses=True
+    )
+    with Connection(redis_conn):
+        worker = Worker(['default'])
+        worker.work()
