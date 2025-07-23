@@ -25,7 +25,16 @@ class CompareCodeRequest(BaseModel):
 # Connect to Redis and RQ
 redis_host = os.environ.get("REDIS_HOST", "localhost")
 redis_port = int(os.environ.get("REDIS_PORT", 6379))
-redis_conn = Redis(host=redis_host, port=redis_port)
+redis_user = os.environ.get("REDIS_USER", None)
+redis_password = os.environ.get("REDIS_PASSWORD", None)
+
+redis_conn = Redis(
+    host=redis_host,
+    port=redis_port,
+    username=redis_user,
+    password=redis_password,
+    decode_responses=True
+)
 q = Queue(connection=redis_conn)
 
 @app.post("/execute")
