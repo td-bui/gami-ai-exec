@@ -8,7 +8,12 @@ from rq import Worker
 from redis import Redis
 
 def build_code_to_run(code: str, test_input: str) -> str:
-    return f"{code}\nprint({test_input})"
+    """
+    Builds the Python code to be executed.
+    It creates an instance from the test_input string and then calls the
+    description() method on it to get a comparable string value.
+    """
+    return f"{code}\ninstance = {test_input}\nprint(instance.description())"
 
 def run_code(code: str):
     with tempfile.NamedTemporaryFile(mode="w", suffix=".py", delete=False) as tmp:
