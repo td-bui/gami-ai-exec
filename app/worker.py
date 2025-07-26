@@ -4,16 +4,31 @@ import os
 import subprocess
 import time
 import resource
+import json
 from rq import Worker
 from redis import Redis
 
 def build_code_to_run(code: str, test_input: str) -> str:
     """
     Builds the Python code to be executed.
-    It creates an instance from the test_input string and then calls the
-    description() method on it to get a comparable string value.
+    It evaluates the test_input. If the result is a custom object,
+    it serializes its state to a JSON string for value-based comparison.
+    Otherwise, it prints the primitive value directly.
     """
-    return f"{code}\ninstance = {test_input}\nprint(instance.description())"
+    # This logic will be executed in the subprocess
+    comparison_logic = f"""
+try:
+    instance = {test_input}
+    # If it's a custom object, compare its state. Otherwise, print the value.
+    if hasattr(instance, '__dict__'):
+        # Sort keys for a consistent, comparable output
+        print(json.dumps(instance.__dict__, sort_keys=True))
+    else:
+        print(instance)
+except Exception as e:
+    print(f"Error during execution: {{e}}")
+"""
+    return f"{code}\n{comparison_logic}"
 
 def run_code(code: str):
     with tempfile.NamedTemporaryFile(mode="w", suffix=".py", delete=False) as tmp:
